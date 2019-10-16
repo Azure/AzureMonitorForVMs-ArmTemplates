@@ -1,0 +1,418 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WorkspaceResourceId": {
+            "type": "String",
+            "metadata": {
+                "description": "Workspace Resource ID."
+            }
+        },
+        "WorkspaceLocation": {
+            "type": "String",
+            "metadata": {
+                "description": "Workspace Location."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "name": "SMSolutionDeployment",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2015-11-01-preview",
+                            "type": "Microsoft.OperationsManagement/solutions",
+                            "location": "[parameters('WorkspaceLocation')]",
+                            "name": "[concat('ServiceMap', '(', split(parameters('WorkspaceResourceId'),'/')[8], ')')]",
+                            "properties": {
+                                "workspaceResourceId": "[parameters('WorkspaceResourceId')]"
+                            },
+                            "plan": {
+                                "name": "[concat('ServiceMap', '(', split(parameters('WorkspaceResourceId'),'/')[8], ')')]",
+                                "product": "[concat('OMSGallery/', 'ServiceMap')]",
+                                "promotionCode": "",
+                                "publisher": "Microsoft"
+                            }
+                        }
+                    ]
+                }
+            },
+            "subscriptionId": "[split(parameters('WorkspaceResourceId'),'/')[2]]",
+            "resourceGroup": "[split(parameters('WorkspaceResourceId'),'/')[4]]"
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "name": "PerfCountersDeployment",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2017-03-15-preview",
+                            "type": "Microsoft.OperationalInsights/workspaces",
+                            "name": "[split(parameters('WorkspaceResourceId'),'/')[8]]",
+                            "location": "[parameters('WorkspaceLocation')]",
+                            "resources": [
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Pct-Free-Space",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "% Free Space"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Avg-DiskSecRead",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Avg. Disk sec/Read"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Avg-DiskSecTransfer",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Avg. Disk sec/Transfer"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Avg-DiskSecWrite",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Avg. Disk sec/Write"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Disk-BytesSec",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Disk Bytes/sec"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Disk-ReadBytesSec",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Disk Read Bytes/sec"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Disk-ReadsSec",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Disk Reads/sec"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Disk-TransfersSec",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Disk Transfers/sec"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Disk-WriteBytesSec",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Disk Write Bytes/sec"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-Disk-WritesSec",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Disk Writes/sec"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-LogicalDisk-FreeMegabytes",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "LogicalDisk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Free Megabytes"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-Memory-AvailableMBytes",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "Memory",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Available MBytes"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-NetworkAdapter-BytesReceived-sec",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "Network Adapter",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Bytes Received/sec"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-NetworkAdapter-BytesSent-sec",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "Network Adapter",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "counterName": "Bytes Sent/sec"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-Processor-Pct-Processor-Time-Total",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "WindowsPerformanceCounter",
+                                    "properties": {
+                                        "objectName": "Processor",
+                                        "instanceName": "_Total",
+                                        "intervalSeconds": 60,
+                                        "counterName": "% Processor Time"
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-Logical-Disk-Linux",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "LinuxPerformanceObject",
+                                    "properties": {
+                                        "objectName": "Logical Disk",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "performanceCounters": [
+                                            {
+                                                "counterName": "% Used Space"
+                                            },
+                                            {
+                                                "counterName": "Disk Read Bytes/sec"
+                                            },
+                                            {
+                                                "counterName": "Disk Reads/sec"
+                                            },
+                                            {
+                                                "counterName": "Disk Transfers/sec"
+                                            },
+                                            {
+                                                "counterName": "Disk Write Bytes/sec"
+                                            },
+                                            {
+                                                "counterName": "Disk Writes/sec"
+                                            },
+                                            {
+                                                "counterName": "Free Megabytes"
+                                            },
+                                            {
+                                                "counterName": "Logical Disk Bytes/sec"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-Memory-Linux",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "LinuxPerformanceObject",
+                                    "properties": {
+                                        "objectName": "Memory",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "performanceCounters": [
+                                            {
+                                                "counterName": "Available MBytes Memory"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-Network",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "LinuxPerformanceObject",
+                                    "properties": {
+                                        "objectName": "Network",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "performanceCounters": [
+                                            {
+                                                "counterName": "Total Bytes Received"
+                                            },
+                                            {
+                                                "counterName": "Total Bytes Transmitted"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "VMInsights-Processor-Pct-Processor-Time-Linux",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "LinuxPerformanceObject",
+                                    "properties": {
+                                        "objectName": "Processor",
+                                        "instanceName": "*",
+                                        "intervalSeconds": 60,
+                                        "performanceCounters": [
+                                            {
+                                                "counterName": "% Processor Time"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "apiVersion": "2015-11-01-preview",
+                                    "type": "datasources",
+                                    "name": "DataSource_LinuxPerformanceCollection",
+                                    "dependsOn": [
+                                        "[parameters('WorkspaceResourceId')]"
+                                    ],
+                                    "kind": "LinuxPerformanceCollection",
+                                    "properties": {
+                                        "state": "Enabled"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "subscriptionId": "[split(parameters('WorkspaceResourceId'),'/')[2]]",
+            "resourceGroup": "[split(parameters('WorkspaceResourceId'),'/')[4]]"
+        }
+    ],
+    "outputs": {}
+}

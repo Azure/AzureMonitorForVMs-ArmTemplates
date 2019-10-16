@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "<VirtualMachineLocation>"
+        },
+        "image": {
+            "value": {
+                "publisher": "<ImagePublisher>",
+                "offer": "<ImageOffer>",
+                "sku": "<ImageSKU>",
+                "version": "<ImageVersion>"
+            }
+        },
+        "osType": {
+            "value": "<OSType>"
+        },
+        "networkInterfaceName": {
+            "value": "<NetworkInterfaceName>"
+        },
+        "subnetName": {
+            "value": "default"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/<SubscriptionId>/<ResourceGroup>/VmBladeTest/providers/Microsoft.Network/virtualNetworks/<VirtualNetworkName>"
+        },
+        "workspaceId": {
+            "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
+        },
+        "virtualMachineName": {
+            "value": "<VirtualMachineName>"
+        },
+        "virtualMachineRG": {
+            "value": "<VirtualMachineResourceGroup>"
+        },
+        "osDiskType": {
+            "value": "<OSDiskType>"
+        },
+        "virtualMachineSize": {
+            "value": "<VirtualMachineSize>"
+        },
+        "adminUsername": {
+            "value": "<UserName>"
+        },
+        "adminPassword": {
+            "value": "<Password>"
+        }
+    }
+}

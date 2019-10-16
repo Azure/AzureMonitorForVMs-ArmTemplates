@@ -1,0 +1,203 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "String"
+        },
+        "vmssName": {
+            "type": "String"
+        },
+        "vmSku": {
+            "type": "String"
+        },
+        "adminUsername": {
+            "type": "String"
+        },
+        "instanceCount": {
+            "type": "String"
+        },
+        "image": {
+            "type": "Object"
+        },
+        "osType": {
+            "type": "String"
+        },
+        "singlePlacementGroup": {
+            "type": "String"
+        },
+        "pipName": {
+            "type": "String"
+        },
+        "pipLabel": {
+            "type": "String"
+        },
+        "skuType": {
+            "type": "String"
+        },
+        "ipAllocationMethod": {
+            "type": "String"
+        },
+        "priority": {
+            "type": "String"
+        },
+        "subnetId": {
+            "type": "String"
+        },
+        "enableAcceleratedNetworking": {
+            "type": "String"
+        },
+        "publicIpAddressPerInstance": {
+            "type": "String"
+        },
+        "upgradeMode": {
+            "type": "String"
+        },
+        "adminPassword": {
+            "type": "SecureString"
+        },
+        "vnetName": {
+            "type": "String"
+        },
+        "subnetResourceGroup": {
+            "type": "String"
+        },
+        "workspaceResourceId": {
+            "type": "String"
+        }
+    },
+    "variables": {
+        "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
+        "networkApiVersion": "2018-01-01",
+        "storageApiVersion": "2018-07-01",
+        "computeApiVersion": "2018-06-01",
+        "autoscaleApiVersion": "2015-04-01",
+        "vhdContainerName": "[concat(variables('namingInfix'), 'vhd')]",
+        "storageAccountNamePrefix": "[toLower(concat(substring(uniqueString(resourceGroup().id), 0, 9), variables('namingInfix'), 'sa'))]",
+        "daExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
+        "daExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
+        "daExtensionVersion": "9.5",
+        "mmaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'MMAExtension', 'OMSExtension')]",
+        "mmaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OmsAgentForLinux')]",
+        "mmaExtensionVersion": "[if(equals(toLower(parameters('osType')), 'windows'), '1.0', '1.4')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Premium_LRS"
+            },
+            "kind": "Storage",
+            "name": "[concat(variables('storageAccountNamePrefix'), copyIndex())]",
+            "apiVersion": "[variables('storageApiVersion')]",
+            "location": "[parameters('location')]",
+            "copy": {
+                "name": "storageLoop",
+                "count": 5
+            },
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "sku": {
+                "name": "[parameters('vmSku')]",
+                "tier": "Standard",
+                "capacity": "[int(parameters('instanceCount'))]"
+            },
+            "name": "[parameters('vmssName')]",
+            "apiVersion": "[variables('computeApiVersion')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "overprovision": "true",
+                "upgradePolicy": {
+                    "mode": "[parameters('upgradeMode')]"
+                },
+                "singlePlacementGroup": "[parameters('singlePlacementGroup')]",
+                "virtualMachineProfile": {
+                    "storageProfile": {
+                        "imageReference": "[parameters('image')]",
+                        "osDisk": {
+                            "createOption": "FromImage",
+                            "caching": "ReadWrite",
+                            "name": "[concat(variables('namingInfix'), 'osdisk')]",
+                            "vhdContainers": [
+                                "[concat(reference(concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '0')), variables('storageApiVersion')).primaryEndpoints.blob, variables('vhdContainerName'))]",
+                                "[concat(reference(concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '1')), variables('storageApiVersion')).primaryEndpoints.blob, variables('vhdContainerName'))]",
+                                "[concat(reference(concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '2')), variables('storageApiVersion')).primaryEndpoints.blob, variables('vhdContainerName'))]",
+                                "[concat(reference(concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '3')), variables('storageApiVersion')).primaryEndpoints.blob, variables('vhdContainerName'))]",
+                                "[concat(reference(concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '4')), variables('storageApiVersion')).primaryEndpoints.blob, variables('vhdContainerName'))]"
+                            ]
+                        }
+                    },
+                    "priority": "[parameters('priority')]",
+                    "osProfile": {
+                        "computerNamePrefix": "[variables('namingInfix')]",
+                        "adminUsername": "[parameters('adminUsername')]",
+                        "adminPassword": "[parameters('adminPassword')]"
+                    },
+                    "networkProfile": {
+                        "networkInterfaceConfigurations": [
+                            {
+                                "name": "[concat(parameters('vmssName'), 'Nic')]",
+                                "properties": {
+                                    "primary": "true",
+                                    "enableAcceleratedNetworking": "[parameters('enableAcceleratedNetworking')]",
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "[concat(parameters('vmssName'), 'IpConfig')]",
+                                            "properties": {
+                                                "subnet": {
+                                                    "id": "[parameters('subnetId')]"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "extensionProfile": {
+                        "extensions": [
+                            {
+                                "type": "extensions",
+                                "name": "[variables('mmaExtensionName')]",
+                                "location": "[parameters('location')]",
+                                "properties": {
+                                    "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                                    "type": "[variables('mmaExtensionType')]",
+                                    "typeHandlerVersion": "[variables('mmaExtensionVersion')]",
+                                    "autoUpgradeMinorVersion": true,
+                                    "settings": {
+                                        "workspaceId": "[reference(parameters('workspaceResourceId'), '2015-03-20').customerId]",
+                                        "stopOnMultipleConnections": "true"
+                                    },
+                                    "protectedSettings": {
+                                        "workspaceKey": "[listKeys(parameters('workspaceResourceId'), '2015-03-20').primarySharedKey]"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "extensions",
+                                "name": "[variables('daExtensionName')]",
+                                "location": "[parameters('location')]",
+                                "properties": {
+                                    "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
+                                    "type": "[variables('daExtensionType')]",
+                                    "typeHandlerVersion": "[variables('daExtensionVersion')]",
+                                    "autoUpgradeMinorVersion": true
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '0'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '1'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '2'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '3'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', concat(variables('storageAccountNamePrefix'), '4'))]"
+            ]
+        }
+    ]
+}

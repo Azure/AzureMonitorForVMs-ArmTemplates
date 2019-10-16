@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "<VmssLocation>"
+        },
+        "vmssName": {
+            "value": "<VmssName>"
+        },
+        "vmSku": {
+            "value": "<VmssSku>"
+        },
+        "adminUsername": {
+            "value": "<VmssUserName>"
+        },
+        "instanceCount": {
+            "value": "<VmssInstanceCount>"
+        },
+        "image": {
+            "value": {
+                "sku": "<ImageSku>",
+                "publisher": "<ImagePublisher>",
+                "version": "<ImageVersion>",
+                "offer": "<ImageOffer>"
+            }
+        },
+        "singlePlacementGroup": {
+            "value": "true"
+        },
+        "pipName": {
+            "value": "<PipName>"
+        },
+        "pipLabel": {
+            "value": "<PipLabel>"
+        },
+        "skuType": {
+            "value": "Standard"
+        },
+        "ipAllocationMethod": {
+            "value": "Static"
+        },
+        "priority": {
+            "value": "Regular"
+        },
+        "subnetId": {
+            "value": "<SubnetResourceId>"
+        },
+        "enableAcceleratedNetworking": {
+            "value": "false"
+        },
+        "publicIpAddressPerInstance": {
+            "value": "false"
+        },
+        "upgradeMode": {
+            "value": "<UpgradeMode>"
+        },
+        "adminPassword": {
+            "value": "<Password>"
+        },
+        "vnetName": {
+            "value": "<VnetName>"
+        },
+        "subnetResourceGroup": {
+            "value": "<VmssResourceGroup>"
+        },
+        "workspaceId": {
+            "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
+        }
+    }
+}

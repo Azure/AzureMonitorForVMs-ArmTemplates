@@ -46,5 +46,3 @@ az group deployment create --resource-group <ResourceGroupName> --template-file 
 [Deploy Azure Monitor for VMs (preview)](https://docs.microsoft.com/azure/azure-monitor/insights/vminsights-onboard)
 
 [GA FAQ](https://docs.microsoft.comazure/azure-monitor/insights/vminsights-ga-release-faq)
-
-[Repository](https://github.com/Azure/AzureMonitorForVMs-ArmTemplates.git)

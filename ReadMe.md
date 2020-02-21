@@ -13,7 +13,7 @@ This download contains onboarding templates for different scenarios:
 > Note: If Virtual Machines Scale Sets are already present and the upgrade policy is set to 'Manual', Azure Monitor for VMs will not be enabled for instances by default after running 'ExistingVmssOnboarding' template. You have Manually upgrade the instances.
 
 ### Configure Workspace:
-- ConfigureWorkspace: Use this to enable Azure Monitor for VMs features for a new workspace and to configure the performance counters.
+- ConfigureWorkspace: Use this to enable Azure Monitor for VMs solution on the workspace.
 
 ## How to Deploy:
 Each folder has a 'Template' and a 'Parameters' file.
@@ -44,3 +44,7 @@ az group deployment create --resource-group <ResourceGroupName> --template-file 
 [Azure Monitor for VMs (preview)](https://docs.microsoft.com/azure/azure-monitor/insights/vminsights-overview)
 
 [Deploy Azure Monitor for VMs (preview)](https://docs.microsoft.com/azure/azure-monitor/insights/vminsights-onboard)
+
+[GA FAQ](https://docs.microsoft.comazure/azure-monitor/insights/vminsights-ga-release-faq)
+
+[Repository](https://github.com/Azure/AzureMonitorForVMs-ArmTemplates.git)

@@ -1,0 +1,78 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VmLocation": {
+            "type": "String",
+            "metadata": {
+                "description": "The Virtual Machine Location."
+            }
+        },
+        "VmResourceId": {
+            "type": "String",
+            "metadata": {
+                "description": "VM Resource ID."
+            }
+        },
+        "WorkspaceResourceId": {
+            "type": "String",
+            "metadata": {
+                "description": "Workspace Resource ID."
+            }
+        }
+    },
+    "variables": {
+        "VmName": "[split(parameters('VmResourceId'),'/')[8]]",
+        "DaExtensionName": "DependencyAgentWindows",
+        "DaExtensionType": "DependencyAgentWindows",
+        "MmaExtensionName": "MMAExtension",
+        "MmaExtensionType": "MicrosoftMonitoringAgent"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.HybridCompute/machines",
+            "apiVersion": "2020-03-11-preview",
+            "name": "[variables('VmName')]",
+            "location": "[parameters('VmLocation')]",
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2020-03-11-preview",
+                    "name": "[variables('DaExtensionName')]",
+                    "location": "[parameters('VmLocation')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.HybridCompute/machines/', variables('VmName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
+                        "type": "[variables('DaExtensionType')]",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {}
+                    }
+                },
+                {
+                    "type": "extensions",
+                    "apiVersion": "2020-03-11-preview",
+                    "name": "[variables('MmaExtensionName')]",
+                    "location": "[parameters('VmLocation')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.HybridCompute/machines/', variables('VmName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                        "type": "[variables('MmaExtensionType')]",
+                        "settings": {
+                            "workspaceId": "[reference(parameters('WorkspaceResourceId'), '2015-03-20').customerId]",
+                            "azureResourceId": "[parameters('VmResourceId')]",
+                            "stopOnMultipleConnections": "true"
+                        },
+                        "protectedSettings": {
+                            "workspaceKey": "[listKeys(parameters('WorkspaceResourceId'), '2015-03-20').primarySharedKey]"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {}
+}

@@ -15,8 +15,6 @@ This download contains onboarding templates for different scenarios:
 ### Azure Arc Machines:
 - ExistingArcVmOnboarding: Use this template to enable Azure Monitor for VMs if the Azure Arc machine already exists.
 
-> Note: You might observe ARM deployment template to either fail/timeout. This is expected for now as Azure Arc agent is still in preview and doesn't full support Dependency Agent yet. Furthermore, you can confirm the successful installation of the extensions by navigating to "C:\Packages\Plugins\" in your Azure Arc machine.
-
 ### Configure Workspace:
 - ConfigureWorkspace: Use this to enable Azure Monitor for VMs solution on the workspace.
 

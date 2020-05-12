@@ -14,6 +14,12 @@
                 "description": "VM Resource ID."
             }
         },
+        "osType": {
+            "type": "String",
+            "metadata": {
+                "description": "OS Type, Example: Linux / Windows"
+            }
+        },
         "WorkspaceResourceId": {
             "type": "String",
             "metadata": {
@@ -23,10 +29,10 @@
     },
     "variables": {
         "VmName": "[split(parameters('VmResourceId'),'/')[8]]",
-        "DaExtensionName": "DependencyAgentWindows",
-        "DaExtensionType": "DependencyAgentWindows",
-        "MmaExtensionName": "MMAExtension",
-        "MmaExtensionType": "MicrosoftMonitoringAgent"
+        "DaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
+        "DaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
+        "MmaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'MMAExtension', 'OMSExtension')]",
+        "MmaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OmsAgentForLinux')]"
     },
     "resources": [
         {

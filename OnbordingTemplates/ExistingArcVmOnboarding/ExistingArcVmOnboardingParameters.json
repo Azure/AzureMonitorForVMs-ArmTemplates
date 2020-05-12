@@ -1,15 +1,18 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "VmLocation": {
-        "value": "<VirtualMachineLocation>"
-      },
-      "VmResourceId": {
-        "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.HybridCompute/machines/<VirtualMachineName>"
-      },
-      "WorkspaceResourceId": {
-        "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
-      }
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "VmLocation": {
+      "value": "<VirtualMachineLocation>"
+    },
+    "VmResourceId": {
+      "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.HybridCompute/machines/<VirtualMachineName>"
+    },
+    "osType": {
+      "value": "<OSType>"
+    },
+    "WorkspaceResourceId": {
+      "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
     }
   }
+}

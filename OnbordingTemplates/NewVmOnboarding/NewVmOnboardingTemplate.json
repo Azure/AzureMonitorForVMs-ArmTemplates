@@ -118,7 +118,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "apiVersion": "2017-12-01",
+            "apiVersion": "2019-12-01",
             "name": "[concat(parameters('virtualMachineName'),'/', variables('daExtensionName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -128,7 +128,9 @@
                 "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
                 "type": "[variables('daExtensionType')]",
                 "typeHandlerVersion": "[variables('daExtensionVersion')]",
-                "autoUpgradeMinorVersion": true
+                "autoUpgradeMinorVersion": true,
+                "enableAutomaticUpgrade": true,
+                "settings": {}
             }
         },
         {

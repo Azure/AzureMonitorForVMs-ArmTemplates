@@ -25,6 +25,9 @@
                 "offer": "<ImageOffer>"
             }
         },
+        "osType": {
+            "Value": "<OSType>"
+        },
         "singlePlacementGroup": {
             "value": "true"
         },
@@ -64,7 +67,7 @@
         "subnetResourceGroup": {
             "value": "<VmssResourceGroup>"
         },
-        "workspaceId": {
+        "workspaceResourceId": {
             "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
         }
     }

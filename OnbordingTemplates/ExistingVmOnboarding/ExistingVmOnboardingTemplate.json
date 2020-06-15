@@ -45,7 +45,7 @@
             "resources": [
                 {
                     "type": "extensions",
-                    "apiVersion": "2018-10-01",
+                    "apiVersion": "2019-12-01",
                     "name": "[variables('DaExtensionName')]",
                     "location": "[parameters('VmLocation')]",
                     "dependsOn": [
@@ -55,7 +55,9 @@
                         "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
                         "type": "[variables('DaExtensionType')]",
                         "typeHandlerVersion": "[variables('DaExtensionVersion')]",
-                        "autoUpgradeMinorVersion": true
+                        "autoUpgradeMinorVersion": true,
+                        "enableAutomaticUpgrade": true,
+                        "settings": {}
                     }
                 },
                 {

@@ -25,7 +25,7 @@
         "virtualNetworkId": {
             "value": "/subscriptions/<SubscriptionId>/<ResourceGroup>/VmBladeTest/providers/Microsoft.Network/virtualNetworks/<VirtualNetworkName>"
         },
-        "workspaceId": {
+        "workspaceResourceId": {
             "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
         },
         "virtualMachineName": {

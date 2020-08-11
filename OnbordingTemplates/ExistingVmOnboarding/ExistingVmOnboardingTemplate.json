@@ -55,9 +55,7 @@
                         "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
                         "type": "[variables('DaExtensionType')]",
                         "typeHandlerVersion": "[variables('DaExtensionVersion')]",
-                        "autoUpgradeMinorVersion": true,
-                        "enableAutomaticUpgrade": true,
-                        "settings": {}
+                        "autoUpgradeMinorVersion": true
                     }
                 },
                 {

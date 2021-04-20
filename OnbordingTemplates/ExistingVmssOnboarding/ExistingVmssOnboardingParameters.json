@@ -2,16 +2,16 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VmssResourceId": {
+        "vmssResourceId": {
             "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.Compute/virtualMachines/<VirtualMachineScaleSetName>"
         },
-        "VmssLocation": {
+        "vmssLocation": {
             "value": "<VirtualMachineScaleSetLocation>"
         },
-        "OsType": {
+        "osType": {
             "value": "<OSType>"
         },
-        "WorkspaceResourceId": {
+        "workspaceResourceId": {
             "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
         }
     }

@@ -2,13 +2,13 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VmResourceId": {
+        "vmResourceId": {
             "type": "String",
             "metadata": {
                 "description": "VM Resource ID."
             }
         },
-        "VmLocation": {
+        "vmLocation": {
             "type": "String",
             "metadata": {
                 "description": "The Virtual Machine Location."
@@ -20,7 +20,7 @@
                 "description": "OS Type, Example: Linux / Windows"
             }
         },
-        "WorkspaceResourceId": {
+        "workspaceResourceId": {
             "type": "String",
             "metadata": {
                 "description": "Workspace Resource ID."
@@ -28,7 +28,7 @@
         }
     },
     "variables": {
-        "VmName": "[split(parameters('VmResourceId'),'/')[8]]",
+        "VmName": "[split(parameters('vmResourceId'),'/')[8]]",
         "DaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
         "DaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
         "DaExtensionVersion": "9.5",
@@ -41,13 +41,13 @@
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-10-01",
             "name": "[variables('VmName')]",
-            "location": "[parameters('VmLocation')]",
+            "location": "[parameters('vmLocation')]",
             "resources": [
                 {
                     "type": "extensions",
                     "apiVersion": "2019-12-01",
                     "name": "[variables('DaExtensionName')]",
-                    "location": "[parameters('VmLocation')]",
+                    "location": "[parameters('vmLocation')]",
                     "dependsOn": [
                         "[concat('Microsoft.Compute/VirtualMachines/', variables('VmName'))]"
                     ],
@@ -62,7 +62,7 @@
                     "type": "extensions",
                     "apiVersion": "2018-10-01",
                     "name": "[variables('MmaExtensionName')]",
-                    "location": "[parameters('VmLocation')]",
+                    "location": "[parameters('vmLocation')]",
                     "dependsOn": [
                         "[concat('Microsoft.Compute/VirtualMachines/', variables('VmName'))]"
                     ],
@@ -72,12 +72,12 @@
                         "typeHandlerVersion": "[variables('MmaExtensionVersion')]",
                         "autoUpgradeMinorVersion": "true",
                         "settings": {
-                            "workspaceId": "[reference(parameters('WorkspaceResourceId'), '2015-03-20').customerId]",
-                            "azureResourceId": "[parameters('VmResourceId')]",
+                            "workspaceId": "[reference(parameters('workspaceResourceId'), '2015-03-20').customerId]",
+                            "azureResourceId": "[parameters('vmResourceId')]",
                             "stopOnMultipleConnections": "true"
                         },
                         "protectedSettings": {
-                            "workspaceKey": "[listKeys(parameters('WorkspaceResourceId'), '2015-03-20').primarySharedKey]"
+                            "workspaceKey": "[listKeys(parameters('workspaceResourceId'), '2015-03-20').primarySharedKey]"
                         }
                     }
                 }

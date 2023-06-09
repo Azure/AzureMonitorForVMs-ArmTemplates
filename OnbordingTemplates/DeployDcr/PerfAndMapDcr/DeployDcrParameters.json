@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WorkspaceResourceId": {
+            "value": "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroup>/providers/Microsoft.OperationalInsights/workspaces/<WorkspaceName>"
+        },
+        "WorkspaceLocation": {
+            "value": "<WorkspaceLocation>"
+        },
+        "userGivenDcrName": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Name of the Data Collection Rule(DCR)",
+              "description": "This is the name of the AMA-VMI Data Collection Rule(DCR)"
+            },
+            "defaultValue": "ama-vmi-default-dcr"
+        }
+    }
+}

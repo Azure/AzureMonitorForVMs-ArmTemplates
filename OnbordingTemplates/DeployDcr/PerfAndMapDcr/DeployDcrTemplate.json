@@ -20,7 +20,7 @@
               "displayName": "Name of the Data Collection Rule(DCR)",
               "description": "This is the name of the AMA-VMI Data Collection Rule(DCR)"
             },
-            "defaultValue": "ama-vmi-default-dcr"
+            "defaultValue": "ama-vmi-default-perf&da-dcr"
         }
     },
     "variables": {},

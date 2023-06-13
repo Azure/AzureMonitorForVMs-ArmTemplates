@@ -18,9 +18,9 @@
             "type": "String",
             "metadata": {
               "displayName": "Name of the Data Collection Rule(DCR)",
-              "description": "This is the name of the AMA-VMI Data Collection Rule(DCR)"
+              "description": "This is the name of the AMA-VMI Perf only Data Collection Rule(DCR)"
             },
-            "defaultValue": "ama-vmi-default-dcr"
+            "defaultValue": "ama-vmi-default-perf-dcr"
         }
     },
     "variables": {},

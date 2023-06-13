@@ -9,12 +9,7 @@
             "value": "<WorkspaceLocation>"
         },
         "userGivenDcrName": {
-            "type": "String",
-            "metadata": {
-              "displayName": "Name of the Data Collection Rule(DCR)",
-              "description": "This is the name of the AMA-VMI Data Collection Rule(DCR)"
-            },
-            "defaultValue": "ama-vmi-default-dcr"
+            "value": "<DcrResourceId>"
         }
     }
 }

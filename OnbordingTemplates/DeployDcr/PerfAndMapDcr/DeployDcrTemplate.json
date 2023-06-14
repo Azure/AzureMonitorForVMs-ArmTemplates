@@ -20,7 +20,7 @@
               "displayName": "Name of the Data Collection Rule(DCR)",
               "description": "This is the name of the AMA-VMI Data Collection Rule(DCR)"
             },
-            "defaultValue": "ama-vmi-default-perf&da-dcr"
+            "defaultValue": "ama-vmi-default-perfAndda-dcr"
         }
     },
     "variables": {},
@@ -40,7 +40,7 @@
                         {
                             "type": "Microsoft.Insights/dataCollectionRules",
                             "apiVersion": "2021-04-01",
-                            "name": "[concat('MSVMI-', 'Perf&DA-', parameters('userGivenDcrName'))]",
+                            "name": "[concat('MSVMI-', 'PerfAndDa-', parameters('userGivenDcrName'))]",
                             "location": "[parameters('WorkspaceLocation')]",
                             "properties": {
                                 "description": "Data collection rule for VM Insights.",

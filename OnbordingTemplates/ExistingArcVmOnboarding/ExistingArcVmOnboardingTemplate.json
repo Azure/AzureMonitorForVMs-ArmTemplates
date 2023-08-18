@@ -2,13 +2,13 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VmLocation": {
+        "vmLocation": {
             "type": "String",
             "metadata": {
                 "description": "The Virtual Machine Location."
             }
         },
-        "VmResourceId": {
+        "vmResourceId": {
             "type": "String",
             "metadata": {
                 "description": "VM Resource ID."
@@ -20,7 +20,7 @@
                 "description": "OS Type, Example: Linux / Windows"
             }
         },
-        "WorkspaceResourceId": {
+        "workspaceResourceId": {
             "type": "String",
             "metadata": {
                 "description": "Workspace Resource ID."
@@ -28,30 +28,30 @@
         }
     },
     "variables": {
-        "VmName": "[split(parameters('VmResourceId'),'/')[8]]",
-        "DaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
-        "DaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
-        "MmaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OMSAgentForLinux')]",
-        "MmaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OmsAgentForLinux')]"
+        "vmName": "[split(parameters('vmResourceId'),'/')[8]]",
+        "daExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
+        "daExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
+        "mmaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OMSAgentForLinux')]",
+        "mmaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OmsAgentForLinux')]"
     },
     "resources": [
         {
             "type": "Microsoft.HybridCompute/machines",
             "apiVersion": "2020-03-11-preview",
-            "name": "[variables('VmName')]",
-            "location": "[parameters('VmLocation')]",
+            "name": "[variables('vmName')]",
+            "location": "[parameters('vmLocation')]",
             "resources": [
                 {
                     "type": "extensions",
                     "apiVersion": "2020-03-11-preview",
-                    "name": "[variables('DaExtensionName')]",
-                    "location": "[parameters('VmLocation')]",
+                    "name": "[variables('daExtensionName')]",
+                    "location": "[parameters('vmLocation')]",
                     "dependsOn": [
-                        "[concat('Microsoft.HybridCompute/machines/', variables('VmName'))]"
+                        "[concat('Microsoft.HybridCompute/machines/', variables('vmName'))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
-                        "type": "[variables('DaExtensionType')]",
+                        "type": "[variables('daExtensionType')]",
                         "autoUpgradeMinorVersion": true,
                         "settings": {}
                     }
@@ -59,21 +59,21 @@
                 {
                     "type": "extensions",
                     "apiVersion": "2020-03-11-preview",
-                    "name": "[variables('MmaExtensionName')]",
-                    "location": "[parameters('VmLocation')]",
+                    "name": "[variables('mmaExtensionName')]",
+                    "location": "[parameters('vmLocation')]",
                     "dependsOn": [
-                        "[concat('Microsoft.HybridCompute/machines/', variables('VmName'))]"
+                        "[concat('Microsoft.HybridCompute/machines/', variables('vmName'))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.EnterpriseCloud.Monitoring",
-                        "type": "[variables('MmaExtensionType')]",
+                        "type": "[variables('mmaExtensionType')]",
                         "settings": {
-                            "workspaceId": "[reference(parameters('WorkspaceResourceId'), '2015-03-20').customerId]",
-                            "azureResourceId": "[parameters('VmResourceId')]",
+                            "workspaceId": "[reference(parameters('workspaceResourceId'), '2015-03-20').customerId]",
+                            "azureResourceId": "[parameters('vmResourceId')]",
                             "stopOnMultipleConnections": "true"
                         },
                         "protectedSettings": {
-                            "workspaceKey": "[listKeys(parameters('WorkspaceResourceId'), '2015-03-20').primarySharedKey]"
+                            "workspaceKey": "[listKeys(parameters('workspaceResourceId'), '2015-03-20').primarySharedKey]"
                         }
                     }
                 }

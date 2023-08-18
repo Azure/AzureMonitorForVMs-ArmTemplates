@@ -2,13 +2,13 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VmssResourceId": {
+        "vmssResourceId": {
             "type": "String",
             "metadata": {
                 "description": "VM Resource ID."
             }
         },
-        "VmssLocation": {
+        "vmssLocation": {
             "type": "String",
             "metadata": {
                 "description": "The Virtual Machine Location."
@@ -20,7 +20,7 @@
                 "description": "OS Type, Example: Linux / Windows"
             }
         },
-        "WorkspaceResourceId": {
+        "workspaceResourceId": {
             "type": "String",
             "metadata": {
                 "description": "Workspace Resource ID."
@@ -28,56 +28,56 @@
         }
     },
     "variables": {
-        "VmssName": "[split(parameters('VmssResourceId'),'/')[8]]",
-        "DaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
-        "DaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
-        "DaExtensionVersion": "9.5",
-        "MmaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OMSAgentForLinux')]",
-        "MmaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OmsAgentForLinux')]",
-        "MmaExtensionVersion": "[if(equals(toLower(parameters('osType')), 'windows'), '1.0', '1.4')]"
+        "vmssName": "[split(parameters('vmssResourceId'),'/')[8]]",
+        "daExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
+        "daExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'DependencyAgentWindows', 'DependencyAgentLinux')]",
+        "daExtensionVersion": "9.5",
+        "mmaExtensionName": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OMSAgentForLinux')]",
+        "mmaExtensionType": "[if(equals(toLower(parameters('osType')), 'windows'), 'MicrosoftMonitoringAgent', 'OmsAgentForLinux')]",
+        "mmaExtensionVersion": "[if(equals(toLower(parameters('osType')), 'windows'), '1.0', '1.4')]"
     },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets",
             "apiVersion": "2018-10-01",
-            "name": "[variables('VmssName')]",
-            "location": "[parameters('VmssLocation')]",
+            "name": "[variables('vmssName')]",
+            "location": "[parameters('vmssLocation')]",
             "resources": [
                 {
                     "type": "extensions",
                     "apiVersion": "2019-12-01",
-                    "name": "[variables('DaExtensionName')]",
-                    "location": "[parameters('VmssLocation')]",
+                    "name": "[variables('daExtensionName')]",
+                    "location": "[parameters('vmssLocation')]",
                     "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('VmssName'))]"
+                        "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('vmssName'))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
-                        "type": "[variables('DaExtensionType')]",
-                        "typeHandlerVersion": "[variables('DaExtensionVersion')]",
+                        "type": "[variables('daExtensionType')]",
+                        "typeHandlerVersion": "[variables('daExtensionVersion')]",
                         "autoUpgradeMinorVersion": true
                     }
                 },
                 {
                     "type": "extensions",
                     "apiVersion": "2018-10-01",
-                    "name": "[variables('MmaExtensionName')]",
-                    "location": "[parameters('VmssLocation')]",
+                    "name": "[variables('mmaExtensionName')]",
+                    "location": "[parameters('vmssLocation')]",
                     "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('VmssName'))]"
+                        "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('vmssName'))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.EnterpriseCloud.Monitoring",
-                        "type": "[variables('MmaExtensionType')]",
-                        "typeHandlerVersion": "[variables('MmaExtensionVersion')]",
+                        "type": "[variables('mmaExtensionType')]",
+                        "typeHandlerVersion": "[variables('mmaExtensionVersion')]",
                         "autoUpgradeMinorVersion": "true",
                         "settings": {
-                            "workspaceId": "[reference(parameters('WorkspaceResourceId'), '2015-03-20').customerId]",
-                            "azureResourceId": "[parameters('VmssResourceId')]",
+                            "workspaceId": "[reference(parameters('workspaceResourceId'), '2015-03-20').customerId]",
+                            "azureResourceId": "[parameters('vmssResourceId')]",
                             "stopOnMultipleConnections": "true"
                         },
                         "protectedSettings": {
-                            "workspaceKey": "[listKeys(parameters('WorkspaceResourceId'), '2015-03-20').primarySharedKey]"
+                            "workspaceKey": "[listKeys(parameters('workspaceResourceId'), '2015-03-20').primarySharedKey]"
                         }
                     }
                 }
